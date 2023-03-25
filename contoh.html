@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>Simple Todo App</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="display-4 text-center py-1">
+                Todo App!
+            </h1>
+            <div class="jumbotron p-3 shadow-sm">
+                <form action="/create-item" method="POST">
+                    <div class="d-flex align-items-center">
+                          <!-- didalam sini isinya input dan button  -->
+                       <input type="text" style="flex:1" name="item" autofocus autocomplete="off" class="form-control mr=3">
+                       <button class="btn btn-primary">Add New Item</button>    
+                    </div>
+                 </form>
+            </div>
+            <ul class="list-group pb-5">
+                <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                  <span class="item-text">Fake example item</span>
+                  <div>
+                     <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                     <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </li>
+                <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                  <span class="item-text">Fake example item#2</span>
+                  <div>
+                     <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                     <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </li>
+                <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                  <span class="item-text">Fake example item#3</span>
+                  <div>
+                     <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                     <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                  </div>
+                </li>
+            </ul>
+          
+        </div>
+    </body>
+</html>
+
+
+<!-- keterangan utk list-group-item action adalah penunjuk yg item lagi actiove 
+   dengan cara tambahkan class active jadi 
+    <li class="list-group-item list-group-item-action active >
+        sumber: https://getbootstrap.com/docs/4.6/components/list-group/
+        dan utk d-flex align-items-center justify-content-between adalah utk buat compinent ddlamnya dia 
+        flex saling jaga jarak nah ada tulisan item-text dan ada tombol delete dan edit yg terpisah 
+        jadi supaya ada di dalam si list group item ini masing2 
+-->
