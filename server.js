@@ -89,8 +89,6 @@ app.post("/create-item",async function(req,res) {
 
 
 
-
-
 /* NOTE3:
 kita adiatas pada saat masuk di "/" end-point kita punya variable items yg mana 
 dapat dari items = db.colections("items").find().toArray() 
