@@ -27,9 +27,10 @@ app.use(express.urlencoded({extended:false}))
 
 
 //utk get di end-point : "/create-item"
-  app.get("/",function(req,res){
-    //begitu user/client klik alamat maka  kita suguhkan interface/antarmuka 
-    //dari html.css bootstrap kita pake cdn link ke bootstrap 
+  app.get("/",async function(req,res){
+    //read dbnya dgb perintah find dan di ubah ke array supaya list2 dari doc masuk di array 
+    const items = await  db.collection("items").find().toArray()
+    console.log(items)
     res.send(` 
     <!DOCTYPE html>
     <html>
@@ -54,27 +55,16 @@ app.use(express.urlencoded({extended:false}))
                      </form>
                 </div>
                 <ul class="list-group pb-5">
-                    <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                      <span class="item-text">Fake example item</span>
-                      <div>
-                         <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                         <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                      </div>
-                    </li>
-                    <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                      <span class="item-text">Fake example item#2</span>
-                      <div>
-                         <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                         <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                      </div>
-                    </li>
-                    <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                      <span class="item-text">Fake example item#3</span>
-                      <div>
-                         <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                         <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                      </div>
-                    </li>
+                  ${items.map(function(item) {
+                    return ` <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                    <span class="item-text">${item.text}</span>
+                    <div>
+                       <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                       <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                    </div>
+                  </li>`
+                  }).join("")}
+                  
                 </ul>
               
             </div>
@@ -92,28 +82,38 @@ app.use(express.urlencoded({extended:false}))
 //sbb:
 app.post("/create-item",async function(req,res) {
     await db.collection("items").insertOne({text:req.body.item})
-    res.send("thanks for submiting form!")
+    //res.send("thanks for submiting form!")
+    //kita ganti dgn redirect 
+    res.redirect("/")
 })
 
 
 
 
 
-/* NOTE:
+/* NOTE3:
+kita adiatas pada saat masuk di "/" end-point kita punya variable items yg mana 
+dapat dari items = db.colections("items").find().toArray() 
+ini nilau berupa array nah akan kita tampilkan di html saat render end-point 
 
-"mongodb://localhost:27017/TodoApp" <--ini adalah database baru kita 
-namanya TodoApp nah kita diatas masukan value dari input bernama item 
-dimana dimasuka kedalam table "items" 
+pada saat kita inputkan nilai dari inputan maka akan masuk kedalam list nah utk iut bagian di html kita eadit 
+kita gunakan function map dimana utk return htmlnya nilai item.text nya dikembalikan 
+pada bagian diatas hard-textnya ada 3 li ( class list-group-item) nah kita ambil satu aja nnti diloop dgn function map 
+didalam map kita gunakan function teturn nah si ul ditaruh disini 
+sbb:
 
-ingat nama pada form  <form action="/create-item" method="POST">
-utk end point pada /create-item  yg merupaka method POST 
-maka pada app.post("/create-item",async function(req,res) { }
-nama end-point tertulis pada app.post(/create-item) jadi ini /create-item harus sama jika tidak akan error!
-jika berhasi pada google chrome  page adress :http://localhost:5000/create-item 
-akan keluar pesan sesuai yang isi dar res,send yaitu : thanks for submiting form!
+${items.map(function(item){
+    retrun `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+                      <span class="item-text">${item.text}</span>
+                      <div>
+                         <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                         <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                      </div>
+                    </li>`
+}).join("")}
+nah utk baigan waktu kita tambah inputan itu kita buat redirt ke endpoint("/")aja 
+kita hapus :
+jadi diganti dgn res.redirect("/"")
 
-
-utk mongo atlas::
-let client = new MongoClient("mongodb+srv://usernamehere:yourpasswordhere@cluster0.dfvvi.mongodb.net/TodoApp?retryWrites=true&w=majority")
 
 */
