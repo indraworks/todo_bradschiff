@@ -1,11 +1,12 @@
 let express = require('express')
 //intinya ini distactinc dari mongodb.MongoClient jadi kita hanya inmpirt object 
 //MongoClient dari mongodb maka kita tulis {MongoClient}
-let { MongoClient } = require("mongodb")
+let { MongoClient,ObjectId} = require("mongodb")
 let app = express()
 let db 
 
-
+//using public as static agar broser.js yg embed pada html scrip jsnya bisa dipanggil!
+app.use(express.static("public")) 
 async function go() {
     let client = new MongoClient("mongodb://localhost:27017/TodoApp?retryWrites=true&w=majority")
     await client.connect() //wait conection ada beberapa lama mulai dari 3ms sd 3000 takk hingga maka nya pakai await
@@ -20,7 +21,7 @@ async function go() {
 
 
 
-
+app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 
@@ -56,18 +57,21 @@ app.use(express.urlencoded({extended:false}))
                 </div>
                 <ul class="list-group pb-5">
                   ${items.map(function(item) {
-                    return ` <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+              return ` <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
                     <span class="item-text">${item.text}</span>
                     <div>
-                       <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                       <button data-id="${item._id}"class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
                        <button class="delete-me btn btn-danger btn-sm">Delete</button>
                     </div>
                   </li>`
                   }).join("")}
                   
                 </ul>
-              
-            </div>
+               </div>
+               <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+ 
+             <script src="./browser.js"></script>
+
         </body>
     </html>
         `)
@@ -87,31 +91,12 @@ app.post("/create-item",async function(req,res) {
     res.redirect("/")
 })
 
+app.post("/update-item",async function(req,res){
+  await db.collection("items").findOneAndUpdate({_id:new ObjectId(req.body.id)},{$set:{text:req.body.text}})
+  res.send("success")
+})
 
-
-/* NOTE3:
-kita adiatas pada saat masuk di "/" end-point kita punya variable items yg mana 
-dapat dari items = db.colections("items").find().toArray() 
-ini nilau berupa array nah akan kita tampilkan di html saat render end-point 
-
-pada saat kita inputkan nilai dari inputan maka akan masuk kedalam list nah utk iut bagian di html kita eadit 
-kita gunakan function map dimana utk return htmlnya nilai item.text nya dikembalikan 
-pada bagian diatas hard-textnya ada 3 li ( class list-group-item) nah kita ambil satu aja nnti diloop dgn function map 
-didalam map kita gunakan function teturn nah si ul ditaruh disini 
-sbb:
-
-${items.map(function(item){
-    retrun `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-                      <span class="item-text">${item.text}</span>
-                      <div>
-                         <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                         <button class="delete-me btn btn-danger btn-sm">Delete</button>
-                      </div>
-                    </li>`
-}).join("")}
-nah utk baigan waktu kita tambah inputan itu kita buat redirt ke endpoint("/")aja 
-kita hapus :
-jadi diganti dgn res.redirect("/"")
-
+/*
+note :smua coment catatan ada pada dir catatan!
 
 */

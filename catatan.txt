@@ -1,6 +1,0 @@
-ini mmbuat database pada course bradschif dimulai dari ppmbuatan servernya 
-nnti baru kita aconect ke database mongo local saja 
-( bisa ke atlas mongo jika conection inet ok)
-tdak pake mongoose :
-yarn add mongodb express nodemon 
-
