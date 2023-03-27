@@ -1,7 +1,27 @@
 //broser utk memuat event triger yg ktika click dari tombol edit buton 
 document.addEventListener("click",function(e){
-   //event click hanya terriger oleh "edit-me" class saja ,yg lainya tidak ada
-   //jadi event ktika user klik tombol boton edit 
+  //delete feature -tertriger oleh button class "delete-me"
+   if( e.target.classList.contains("delete-me")) {
+    //kita pakai confirm ini bawaan html-js bisa diliat di link sumber pada catatan 
+    if(confirm("do you really want to delete?")){
+        //jika condisi true 
+       axios.post("/delete-item",{id:e.target.getAttribute("data-id")})
+       .then(function(){
+        //if success
+        e.target.parentElement.parentElement.remove()
+       })
+       .catch(function(){
+        //if error
+        console.log("try again later!")
+       })
+    }
+   } 
+
+
+
+ 
+
+  //edit feature - tertriger oleh btton class "edit-me"
    if(e.target.classList.contains("edit-me")) {
      let userInput = prompt("Enter your desire text",e.target.parentElement.parentElement.querySelector(".item-text").innerHTML)
      //e.target.parentElement.parentElement.querySelector(".item-text").innerHTML ini maksudbya pada 

@@ -96,6 +96,10 @@ app.post("/update-item",async function(req,res){
   res.send("success")
 })
 
+app.post("/delete-item",async function(req,res){
+  await db.collection("items").deleteOne({_id:new ObjectId(req.body.id)})
+  res.send("Success delete")
+})
 /*
 note :smua coment catatan ada pada dir catatan!
 
