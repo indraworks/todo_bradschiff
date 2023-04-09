@@ -47,21 +47,21 @@ app.use(express.urlencoded({extended:false}))
                     Todo App!
                 </h1>
                 <div class="jumbotron p-3 shadow-sm">
-                    <form action="/create-item" method="POST">
+                    <form id="create-form" action="/create-item" method="POST">
                         <div class="d-flex align-items-center">
                              
-                           <input name="item" type="text" style="flex:1"  autofocus autocomplete="off" class="form-control mr-3">
+                           <input id="create-field" name="item" type="text" style="flex:1"  autofocus autocomplete="off" class="form-control mr-3">
                            <button class="btn btn-primary">Add New Item</button>    
                         </div>
                      </form>
                 </div>
-                <ul class="list-group pb-5">
+                <ul id="item-list" class="list-group pb-5">
                   ${items.map(function(item) {
               return ` <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
                     <span class="item-text">${item.text}</span>
                     <div>
-                       <button data-id="${item._id}"class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-                       <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                       <button data-id="${item._id}" class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+                       <button data-id="${item._id}" class="delete-me btn btn-danger btn-sm">Delete</button>
                     </div>
                   </li>`
                   }).join("")}
@@ -78,29 +78,35 @@ app.use(express.urlencoded({extended:false}))
   })
 
 
-//utk creare kita buat end-point di /create-item 
-//nah nama item pada input itu nnti sbgai patokan dimana ada value yang masuk 
-//maka supaya si nodejs ketahui maka dgn req.body.item  <--item nama dari input nah 
-//nah cara masukan didaabase dgn db.collections("items") <--items disini nama collection identic dgn table pada sql 
-//dgn insertone comand kuta masukan obejct-property fieldnya contoh {text:req.body.item}
-//sbb:
 app.post("/create-item",async function(req,res) {
-    await db.collection("items").insertOne({text:req.body.item})
-    //res.send("thanks for submiting form!")
-    //kita ganti dgn redirect 
-    res.redirect("/")
+    const info = await db.collection("items").insertOne({text:req.body.text})
+    console.log(info,req.body.text) //check apa isi info 
+    res.json({_id:info.insertedId,text:req.body.text})
+    //nah repsonse yg masuk ke axios berisi ini 
+    //{_id:info.insertedId,text:req.body.text}
+    //han yg id nnti masuk ke buton2 utk pas di click id patokanya _id yg sat button tsb diklik
 })
 
+
+//terima req dari axios.post di end-point "/update-item"
 app.post("/update-item",async function(req,res){
   await db.collection("items").findOneAndUpdate({_id:new ObjectId(req.body.id)},{$set:{text:req.body.text}})
   res.send("success")
 })
 
+//terima req dari axios.post di end-point "/delete-item"
 app.post("/delete-item",async function(req,res){
   await db.collection("items").deleteOne({_id:new ObjectId(req.body.id)})
   res.send("Success delete")
 })
 /*
 note :smua coment catatan ada pada dir catatan!
-
+ketrangan utk create-item diatas:
+//utk creare kita buat end-point di /create-item 
+//nah nama item pada input itu nnti sbgai patokan dimana ada value yang masuk 
+//maka supaya si nodejs ketahui maka dgn req.body.item  <--item nama dari input nah 
+//nah cara masukan didaabase dgn db.collections("items") <--items disini nama collection identic dgn table pada sql 
+//dgn insertone comand kuta masukan obejct-property fieldnya contoh {text:req.body.item}
+//sbb:
+//terima req dari axios.post di end-point "/create-item"
 */
