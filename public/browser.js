@@ -1,5 +1,6 @@
   ////create feature  
 
+ 
 //function templatelistHTML
 function templatelistHTML(item) {
   return ` <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
@@ -10,7 +11,14 @@ function templatelistHTML(item) {
   </div>
 </li>`
 }
-  
+
+ //loadHTML masukin items raw  pada lists
+ let loadHTML = items.map((item)=> {
+  return templatelistHTML(item)
+}).join("")
+
+document.getElementById("item-list").insertAdjacentHTML("beforeend",loadHTML)
+
 let valueField = document.getElementById("create-field")
 
 document.getElementById("create-form").addEventListener("submit",function(e){
